@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# vim: ft=bash ts=2 sw=2 sts=2 et :
+  
+hi() { 
+  tput bold; tput setaf 5
+  cat<<-'EOF'
+                                  .::!!!!!!!:.
+.!!!!!:.                        .:!!!!!!!!!!!!
+~~~~!!!!!!.                 .:!!!!!!!!!UWWW$$$
+    :$$NWX!!:           .:!!!!!!XUWW$$$$$$$$$P
+    $$$$$##WX!:      .<!!!!UW$$$$"  $$$$$$$$#
+    $$$$$  $$$UX   :!!UW$$$$$$$$$   4$$$$$*
+    ^$$$B  $$$$\     $$$$$$$$$$$$   d$$R"
+      "*$bd$$$$      '*$$$$$$$$$$$o+#"
+           """"          """""""
+	EOF
+  tput bold; tput setaf 241
+  echo "Short cuts:"
+  alias | sed 's/alias /  /'
+  echo ""
+  tput sgr0
+}
+
+reason21="$(dirname $(cd $( dirname "${BASH_SOURCE[0]}" ) && pwd ))"
+
+alias ..='cd ..'
+alias ...='cd ../../../'
+
+alias bye="gp; tmux detach"
+alias eg="python3.9 eg.py "
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias ful="bash $reason21/ful "
+alias gp="git add *;git commit -am save;git push;git status"
+alias grep='grep --color=auto'
+alias h="history"
+alias hello="git pull"
+alias ls="ls -G"
+alias tmux="tmux -f $reason21/etc/dottmux "
+alias vi="vim -u $reason21/etc/vimrc "
+alias vims="vim +PluginInstall +qall"         
+alias pdoc="$HOME/Library/Python/3.8/bin/pdoc"
+
+mkdir -p $reason21/docs
+
+doc1() { _doc /Library/Frameworks/Python.framework/Versions/3.9/bin/pdoc; }
+
+_doc() {
+  pdoc=$1 
+  (cd $reason21/src
+  logo="https://github.com/timm/reason/raw/main/etc/img/reason.png"
+  foot="reason v0.1 (c) 2021 Tim Menzies, unlicense.org. Share and enjoy."
+  url="http://github.com/timm/reason/blob/main/src/reason"
+  $pdoc -e reason=$url  --logo $logo --footer-text "$foot" -o $reason21/docs reason.py
+  mv $reason21/docs/reason.html $reason21/docs/index.html
+  $pdoc -e reason=$url  --logo $logo --footer-text "$foot"                   reason.py)
+}
+here() { cd $1; basename `pwd`; }
+
+PROMPT_COMMAND='echo -ne "🙇 $(git branch 2>/dev/null | grep '^*' | colrm 1 2):";PS1="$(here ..)/$(here .):\!\e[m ▶ "'
+hi
